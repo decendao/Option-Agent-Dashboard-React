@@ -65,7 +65,14 @@ export interface MarketDataState {
 export function useMarketData(): MarketDataState {
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('connecting');
   const [uptimeSeconds, setUptimeSeconds] = useState(0);
-  const [spotPrices, setSpotPrices] = useState<Record<string, SpotQuote>>(INITIAL_TICKER_PRICES);
+  const [spotPrices, setSpotPrices] = useState<Record<string, SpotQuote>>(
+    Object.fromEntries(
+      Object.entries(INITIAL_TICKER_PRICES).map(([ticker, price]) => [
+        ticker,
+        { ticker, spotPrice: price, bid: price * 0.999, ask: price * 1.001, last: price, volume: 0, timestamp: new Date().toISOString(), source: 'mock' },
+      ])
+    )
+  );
   const [contracts, setContracts] = useState<OptionContract[]>([]);
   const [agents, setAgents] = useState<AgentInfo[]>(INITIAL_AGENTS);
   const [riskMatrices, setRiskMatrices] = useState<Record<string, RiskMatrix>>({});
@@ -221,31 +228,30 @@ export function useMarketData(): MarketDataState {
       for (const [, chains] of Object.entries(snapshot.options_chains ?? {})) {
         for (const chain of chains) {
           for (const raw of chain.contracts) {
-            const greeks = raw as unknown as Record<string, unknown>;
             allContracts.push({
               id: `${raw.ticker}-${raw.strike}-${raw.option_type}`,
-              ticker: raw.ticker,
-              strike: raw.strike,
-              expiration: raw.expiration,
+              ticker: raw.ticker as string,
+              strike: raw.strike as number,
+              expiration: raw.expiration as string,
               daysToExpiration: Math.max(
                 1,
                 Math.round(
-                  (new Date(raw.expiration).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+                  (new Date(raw.expiration as string).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
                 )
               ),
               type: (raw.option_type as string).toUpperCase() as OptionContract['type'],
-              bid: raw.bid,
-              ask: raw.ask,
-              lastPrice: raw.last,
-              volume: raw.volume,
-              openInterest: raw.open_interest,
-              impliedVolatility: raw.implied_volatility ?? 0,
-              underlyingPrice: raw.spot_price ?? 0,
+              bid: raw.bid as number,
+              ask: raw.ask as number,
+              lastPrice: raw.last as number,
+              volume: raw.volume as number,
+              openInterest: raw.open_interest as number,
+              impliedVolatility: (raw.implied_volatility as number) ?? 0,
+              underlyingPrice: (raw.spot_price as number) ?? 0,
               greeks: {
-                delta: (greeks.delta as number) ?? 0,
-                gamma: (greeks.gamma as number) ?? 0,
-                theta: (greeks.theta as number) ?? 0,
-                vega: (greeks.vega as number) ?? 0,
+                delta: (raw.delta as number) ?? 0,
+                gamma: (raw.gamma as number) ?? 0,
+                theta: (raw.theta as number) ?? 0,
+                vega: (raw.vega as number) ?? 0,
               },
               opportunityScore: 70,
               agentStatus: 'WATCHED',
