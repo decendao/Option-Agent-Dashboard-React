@@ -133,7 +133,7 @@ export interface DashboardSnapshot {
   }>;
   spot_quotes: Record<string, SpotQuote>;
   options_chains: Record<string, Array<{
-    contracts: OptionContract[];
+    contracts: Record<string, unknown>[];
   }>>;
   risk_matrices: Record<string, RiskMatrix>;
   recent_alerts: RiskAlert[];

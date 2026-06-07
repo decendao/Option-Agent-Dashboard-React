@@ -201,16 +201,15 @@ export type WSCallbacks = {
 
 export function createWebSocket(callbacks: WSCallbacks): WebSocket {
   const ws = new WebSocket(WS_BASE);
+  let pingInterval: ReturnType<typeof setInterval> | null = null;
 
   ws.onopen = () => {
     callbacks.onConnected?.();
-    // Ping every 25s to keep alive
-    const pingInterval = setInterval(() => {
+    pingInterval = setInterval(() => {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send('ping');
       }
     }, 25000);
-    ws._pingInterval = pingInterval; // eslint-disable-line no-underscore-dangle
   };
 
   ws.onmessage = (event) => {
@@ -231,7 +230,7 @@ export function createWebSocket(callbacks: WSCallbacks): WebSocket {
 
   ws.onerror = (e) => callbacks.onError?.(e);
   ws.onclose = () => {
-    if (ws._pingInterval) clearInterval(ws._pingInterval);
+    if (pingInterval) clearInterval(pingInterval);
     callbacks.onDisconnected?.();
   };
 
