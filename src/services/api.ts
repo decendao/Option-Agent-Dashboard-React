@@ -1,1 +1,239 @@
-LyoqCiAqIHNyYy9zZXJ2aWNlcy9hcGkudHMKICogQVBJIHNlcnZpY2UgbGF5ZXIgZm9yIG9wdGlvbnNfYWdlbnQgYmFja2VuZC4KICogQWxsIGNhbGxzIGdvIHRvIHRoZSBGYXN0QVBJIHNlcnZlciBydW5uaW5nIGFsb25nc2lkZSB0aGUgb3JjaGVzdHJhdG9yLgogKgogKiBFbnZpcm9ubWVudCB2YXJpYWJsZXMgKFZpdGUpOgogKiAgIFZJVEVfQVBJX1VSTCAgIOKAlCBiYXNlIFVSTCBvZiB0aGUgb3B0aW9uc19hZ2VudCBBUEkgKGRlZmF1bHQ6IGh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCkKICogICBWSVRFX1dTX1VSTCAgICDigJQgV2ViU29ja2V0IFVSTCAoZGVmYXVsdDogd3M6Ly9sb2NhbGhvc3Q6ODAwMC93cykKICovCgppbXBvcnQgdHlwZSB7CiAgQWdlbnRJbmZvLAogIE9wdGlvbkNvbnRyYWN0LAogIFNwb3RRdW90ZSwKICBSaXNrTWF0cml4LAogIFJpc2tBbGVydCwKICBXb3JrZmxvd0xvZywKICBNYWNyb0V2ZW50LAogIERhc2hib2FyZFNuYXBzaG90LAp9IGZyb20gJy4uL3R5cGVzJzsKCi8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQovLyBDb25maWcKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgpjb25zdCBBUElfQkFTRSA9IGltcG9ydC5tZXRhLmVudi5WSVRFX0FQSV9VUkwgPz8gJ2h0dHA6Ly9sb2NhbGhvc3Q6ODAwMCc7CmNvbnN0IFdTX0JBU0UgPSBpbXBvcnQubWV0YS5lbnYuVklURV9XU19VUkwgPz8gYHdzOi8vbG9jYWxob3N0OjgwMDAvd3NgOwoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi8vIFR5cGUgaGVscGVycwovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCmZ1bmN0aW9uIG1hcEFnZW50SW5mbyhyYXc6IFJlY29yZDxzdHJpbmcsIHVua25vd24+KTogQWdlbnRJbmZvIHsKICByZXR1cm4gewogICAgaWQ6IChyYXcubmFtZSBhcyBzdHJpbmcpLnRvTG93ZXJDYXNlKCkucmVwbGFjZSgvW15hLXowLTlfXS9nLCAnXycpLnJlcGxhY2UoL19fKy9nLCAnXycpLAogICAgbmFtZTogcmF3Lm5hbWUgYXMgc3RyaW5nLAogICAgcm9sZTogKHJhdy5uYW1lIGFzIHN0cmluZyksIC8vIEFQSSBkb2Vzbid0IGhhdmUgcm9sZTsgdXNlIG5hbWUKICAgIHN0YXR1czogKHJhdy5zdGF0dXMgYXMgc3RyaW5nKS50b1VwcGVyQ2FzZSgpIGFzIEFnZW50SW5mb1snc3RhdHVzJ10sCiAgICBjdXJyZW50VGFzazogYExhc3QgY3ljbGU6ICR7cmF3Lmxhc3RfY3ljbGVfaWQgPz8gJ+KAlCd9IHwgJHsoKHJhdy5sYXN0X2N5Y2xlX21zIGFzIG51bWJlcikgPz8gMCkudG9GaXhlZCgwKX1tc2AsCiAgICBsYXN0QWN0aXZlVGltZTogcmF3Lmxhc3RfYWN0aXZlX3V0YwogICAgICA/IG5ldyBEYXRlKHJhdy5sYXN0X2FjdGl2ZV91dGMgYXMgc3RyaW5nKS50b0xvY2FsZVRpbWVTdHJpbmcoKQogICAgICA6ICfigJQnLAogICAgcHJvY2Vzc2VkQ291bnQ6IHJhdy5jeWNsZV9jb3VudCBhcyBudW1iZXIgPz8gMCwKICAgIGZsYWdnZWRDb3VudDogMCwKICAgIHBlcmZvcm1hbmNlU2NvcmU6IHJhdy5jb25zZWN1dGl2ZV9lcnJvcnMgPT09IDAgPyA5OS44IDogNTAsCiAgICB3b3JrZmxvd1N0ZXA6IHJhdy5jb25zZWN1dGl2ZV9lcnJvcnMgPT09IDAgPyAxIDogMCwKICB9Owp9CgpmdW5jdGlvbiBtYXBTcG90UXVvdGUocmF3OiBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPik6IFNwb3RRdW90ZSB7CiAgcmV0dXJuIHsKICAgIHRpY2tlcjogcmF3LnRpY2tlciBhcyBzdHJpbmcsCiAgICBzcG90UHJpY2U6IHJhdy5zcG90X3ByaWNlIGFzIG51bWJlciwKICAgIGJpZDogcmF3LmJpZCBhcyBudW1iZXIsCiAgICBhc2s6IHJhdy5hc2sgYXMgbnVtYmVyLAogICAgbGFzdDogcmF3Lmxhc3QgYXMgbnVtYmVyLAogICAgdm9sdW1lOiByYXcudm9sdW1lIGFzIG51bWJlciwKICAgIHRpbWVzdGFtcDogKHJhdy50aW1lc3RhbXBfdXRjIGFzIHN0cmluZykgPz8gbmV3IERhdGUoKS50b0lTT1N0cmluZygpLAogICAgc291cmNlOiByYXcuc291cmNlIGFzIHN0cmluZyA/PyAnYXBpJywKICB9Owp9CgpmdW5jdGlvbiBtYXBPcHRpb25Db250cmFjdChyYXc6IFJlY29yZDxzdHJpbmcsIHVua25vd24+KTogT3B0aW9uQ29udHJhY3QgewogIGNvbnN0IGdyZWVrcyA9IHJhdyBhcyBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPjsKICByZXR1cm4gewogICAgaWQ6IGAke3Jhdy50aWNrZXJ9LSR7cmF3LnN0cmlrZX0tJHtyYXcub3B0aW9uX3R5cGV9YCwKICAgIHRpY2tlcjogcmF3LnRpY2tlciBhcyBzdHJpbmcsCiAgICBzdHJpa2U6IHJhdy5zdHJpa2UgYXMgbnVtYmVyLAogICAgZXhwaXJhdGlvbjogcmF3LmV4cGlyYXRpb24gYXMgc3RyaW5nLAogICAgZGF5c1RvRXhwaXJhdGlvbjogTWF0aC5tYXgoCiAgICAgIDEsCiAgICAgIE1hdGgucm91bmQoCiAgICAgICAgKG5ldyBEYXRlKHJhdy5leHBpcmF0aW9uIGFzIHN0cmluZykuZ2V0VGltZSgpIC0gRGF0ZS5ub3coKSkgLyAoMTAwMCAqIDYwICogNjAgKiAyNCkKICAgICAgKQogICAgKSwKICAgIHR5cGU6IChyYXcub3B0aW9uX3R5cGUgYXMgc3RyaW5nKS50b1VwcGVyQ2FzZSgpIGFzIE9wdGlvbkNvbnRyYWN0Wyd0eXBlJ10sCiAgICBiaWQ6IHJhdy5iaWQgYXMgbnVtYmVyLAogICAgYXNrOiByYXcuYXNrIGFzIG51bWJlciwKICAgIGxhc3RQcmljZTogcmF3Lmxhc3QgYXMgbnVtYmVyLAogICAgdm9sdW1lOiByYXcudm9sdW1lIGFzIG51bWJlciwKICAgIG9wZW5JbnRlcmVzdDogcmF3Lm9wZW5faW50ZXJlc3QgYXMgbnVtYmVyLAogICAgaW1wbGllZFZvbGF0aWxpdHk6IChyYXcuaW1wbGllZF92b2xhdGlsaXR5IGFzIG51bWJlcikgPz8gMCwKICAgIHVuZGVybHlpbmdQcmljZTogKHJhdyBhcyBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPikuc3BvdF9wcmljZSBhcyBudW1iZXIgPz8gMCwKICAgIGdyZWVrczogewogICAgICBkZWx0YTogKGdyZWVrcy5kZWx0YSBhcyBudW1iZXIpID8/IDAsCiAgICAgIGdhbW1hOiAoZ3JlZWtzLmdhbW1hIGFzIG51bWJlcikgPz8gMCwKICAgICAgdGhldGE6IChncmVla3MudGhldGEgYXMgbnVtYmVyKSA/PyAwLAogICAgICB2ZWdhOiAoZ3JlZWtzLnZlZ2EgYXMgbnVtYmVyKSA/PyAwLAogICAgfSwKICAgIG9wcG9ydHVuaXR5U2NvcmU6IDcwLAogICAgYWdlbnRTdGF0dXM6ICdXQVRDSEVEJywKICAgIHJpc2tSYXRpbmc6ICdNRUQnLAogIH07Cn0KCmZ1bmN0aW9uIG1hcFJpc2tNYXRyaXgocmF3OiBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPik6IFJpc2tNYXRyaXggewogIHJldHVybiB7CiAgICB0aWNrZXI6IHJhdy50aWNrZXIgYXMgc3RyaW5nLAogICAgc3BvdFByaWNlOiByYXcuc3BvdF9wcmljZSBhcyBudW1iZXIsCiAgICBnYW1tYVdhbGxCcmVhY2g6IHJhdy5nYW1tYV93YWxsX2JyZWFjaCBhcyBib29sZWFuLAogICAgemVyb0dhbW1hQnJlYWNoOiByYXcuemVyb19nYW1tYV9icmVhY2ggYXMgYm9vbGVhbiwKICAgIGl2Q3J1c2hJbW1pbmVudDogcmF3Lml2X2NydXNoX2ltbWluZW50IGFzIGJvb2xlYW4sCiAgICBldkFyYkRldGVjdGVkOiByYXcuZXZfYXJiX2RldGVjdGVkIGFzIGJvb2xlYW4sCiAgICBpdkFuYWx5c2lzOiByYXcuaXZfYW5hbHlzaXMKICAgICAgPyB7CiAgICAgICAgICBjdXJyZW50SXY6ICgocmF3Lml2X2FuYWx5c2lzIGFzIFJlY29yZDxzdHJpbmcsIHVua25vd24+KS5jdXJyZW50X2l2IGFzIG51bWJlcikgPz8gMCwKICAgICAgICAgIGl2UmFuazogKChyYXcuaXZfYW5hbHlzaXMgYXMgUmVjb3JkPHN0cmluZywgdW5rbm93bj4pLml2X3JhbmsgYXMgbnVtYmVyKSA/PyAwLAogICAgICAgIH0KICAgICAgOiBudWxsLAogICAgZ2FtbWFXYWxsU3RyaWtlOgogICAgICAoKChyYXcuZ2FtbWFfcHJvZmlsZXMgYXMgdW5rbm93biBhcyBBcnJheTxSZWNvcmQ8c3RyaW5nLCB1bmtub3duPj4pPy5bMF0pCiAgICAgICAgPy5nYW1tYV93YWxsX3N0cmlrZSBhcyBudW1iZXIpID8/IG51bGwsCiAgfTsKfQoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi8vIFJFU1QgQVBJIGNsaWVudAovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCmFzeW5jIGZ1bmN0aW9uIGFwaUZldGNoPFQ+KHBhdGg6IHN0cmluZyk6IFByb21pc2U8VD4gewogIGNvbnN0IHJlcyA9IGF3YWl0IGZldGNoKGAke0FQSV9CQVNFfSR7cGF0aH1gLCB7CiAgICBzaWduYWw6IEFib3J0U2lnbmFsLnRpbWVvdXQoNTAwMCksCiAgfSk7CiAgaWYgKCFyZXMub2spIHsKICAgIHRocm93IG5ldyBFcnJvcihgQVBJICR7cmVzLnN0YXR1c306ICR7cGF0aH1gKTsKICB9CiAgcmV0dXJuIHJlcy5qc29uKCkgYXMgUHJvbWlzZTxUPjsKfQoKZXhwb3J0IGNvbnN0IGFwaSA9IHsKICAvKiogRnVsbCBkYXNoYm9hcmQgc25hcHNob3Qg4oCUIHVzZSBvbiBtb3VudCAqLwogIGFzeW5jIGdldFNuYXBzaG90KCk6IFByb21pc2U8RGFzaGJvYXJkU25hcHNob3Q+IHsKICAgIHJldHVybiBhcGlGZXRjaDxEYXNoYm9hcmRTbmFwc2hvdD4oJy9zbmFwc2hvdCcpOwogIH0sCgogIGFzeW5jIGdldEhlYXJ0YmVhdCgpIHsKICAgIHJldHVybiBhcGlGZXRjaDxSZWNvcmQ8c3RyaW5nLCB1bmtub3duPj4oJy9oZWFydGJlYXQnKTsKICB9LAoKICBhc3luYyBnZXRBZ2VudHMoKTogUHJvbWlzZTxBZ2VudEluZm9bXT4gewogICAgY29uc3QgcmF3ID0gYXdhaXQgYXBpRmV0Y2g8UmVjb3JkPHN0cmluZywgdW5rbm93bj5bXT4oJy9hZ2VudHMnKTsKICAgIHJldHVybiByYXcubWFwKG1hcEFnZW50SW5mbyk7CiAgfSwKCiAgYXN5bmMgZ2V0U3BvdFByaWNlcygpOiBQcm9taXNlPFJlY29yZDxzdHJpbmcsIFNwb3RRdW90ZT4+IHsKICAgIGNvbnN0IHJhdyA9IGF3YWl0IGFwaUZldGNoPFJlY29yZDxzdHJpbmcsIFJlY29yZDxzdHJpbmcsIHVua25vd24+Pj4oJy9zcG90Jyk7CiAgICBjb25zdCByZXN1bHQ6IFJlY29yZDxzdHJpbmcsIFNwb3RRdW90ZT4gPSB7fTsKICAgIGZvciAoY29uc3QgW3RpY2tlciwgcXVvdGVdIG9mIE9iamVjdC5lbnRyaWVzKHJhdykpIHsKICAgICAgcmVzdWx0W3RpY2tlcl0gPSBtYXBTcG90UXVvdGUocXVvdGUpOwogICAgfQogICAgcmV0dXJuIHJlc3VsdDsKICB9LAoKICBhc3luYyBnZXRTcG90UHJpY2UodGlja2VyOiBzdHJpbmcpOiBQcm9taXNlPFNwb3RRdW90ZT4gewogICAgcmV0dXJuIGFwaUZldGNoPFJlY29yZDxzdHJpbmcsIHVua25vd24+PihgL3Nwb3QvJHt0aWNrZXIudG9VcHBlckNhc2UoKX1gKS50aGVuKG1hcFNwb3RRdW90ZSk7CiAgfSwKCiAgYXN5bmMgZ2V0Q2hhaW5zKHRpY2tlcjogc3RyaW5nKTogUHJvbWlzZTxPcHRpb25Db250cmFjdFtdPiB7CiAgICBjb25zdCByYXcgPSBhd2FpdCBhcGlGZXRjaDxSZWNvcmQ8c3RyaW5nLCB1bmtub3duPltdPigKICAgICAgYC9jaGFpbnMvJHt0aWNrZXIudG9VcHBlckNhc2UoKX1gCiAgICApOwogICAgcmV0dXJuIHJhdy5mbGF0TWFwKChjaGFpbjogUmVjb3JkPHN0cmluZywgdW5rbm93bj4pID0+CiAgICAgICgoY2hhaW4uY29udHJhY3RzIGFzIFJlY29yZDxzdHJpbmcsIHVua25vd24+W10pID8/IFtdKS5tYXAobWFwT3B0aW9uQ29udHJhY3QpCiAgICApOwogIH0sCgogIGFzeW5jIGdldFJpc2sodGlja2VyOiBzdHJpbmcpOiBQcm9taXNlPFJpc2tNYXRyaXggfCBudWxsPiB7CiAgICB0cnkgewogICAgICByZXR1cm4gYXBpRmV0Y2g8UmVjb3JkPHN0cmluZywgdW5rbm93bj4+KGAvcmlzay8ke3RpY2tlci50b1VwcGVyQ2FzZSgpfWApLnRoZW4obWFwUmlza01hdHJpeCk7CiAgICB9IGNhdGNoIHsKICAgICAgcmV0dXJuIG51bGw7CiAgICB9CiAgfSwKCiAgYXN5bmMgZ2V0QWxlcnRzKCk6IFByb21pc2U8Umlza0FsZXJ0W10+IHsKICAgIHJldHVybiBhcGlGZXRjaDxSaXNrQWxlcnRbXT4oJy9hbGVydHMnKTsKICB9LAoKICBhc3luYyBoZWFsdGhDaGVjaygpOiBQcm9taXNlPGJvb2xlYW4+IHsKICAgIHRyeSB7CiAgICAgIGF3YWl0IGFwaUZldGNoPHsgc3RhdHVzOiBzdHJpbmcgfT4oJy9oZWFsdGgnKTsKICAgICAgcmV0dXJuIHRydWU7CiAgICB9IGNhdGNoIHsKICAgICAgcmV0dXJuIGZhbHNlOwogICAgfQogIH0sCn07CgovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gV2ViU29ja2V0IGNsaWVudAovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCmV4cG9ydCB0eXBlIFdTQ2FsbGJhY2tzID0gewogIG9uSGVhcnRiZWF0PzogKGRhdGE6IFJlY29yZDxzdHJpbmcsIHVua25vd24+KSA9PiB2b2lkOwogIG9uU3BvdFVwZGF0ZT86IChkYXRhOiBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPikgPT4gdm9pZDsKICBvbkFsZXJ0RmlyZWQ/OiAoZGF0YTogUmVjb3JkPHN0cmluZywgdW5rbm93bj4pID0+IHZvaWQ7CiAgb25Db25uZWN0ZWQ/OiAoKSA9PiB2b2lkOwogIG9uRGlzY29ubmVjdGVkPzogKCkgPT4gdm9pZDsKICBvbkVycm9yPzogKGVycjogdW5rbm93bikgPT4gdm9pZDsKfTsKCmV4cG9ydCBmdW5jdGlvbiBjcmVhdGVXZWJTb2NrZXQoY2FsbGJhY2tzOiBXU0NhbGxiYWNrcyk6IFdlYlNvY2tldCB7CiAgY29uc3Qgd3MgPSBuZXcgV2ViU29ja2V0KFdTX0JBU0UpOwoKICB3cy5vbm9wZW4gPSAoKSA9PiB7CiAgICBjYWxsYmFja3Mub25Db25uZWN0ZWQ/LigpOwogICAgLy8gUGluZyBldmVyeSAyNXMgdG8ga2VlcCBhbGl2ZQogICAgY29uc3QgcGluZ0ludGVydmFsID0gc2V0SW50ZXJ2YWwoKCkgPT4gewogICAgICBpZiAod3MucmVhZHlTdGF0ZSA9PT0gV2ViU29ja2V0Lk9QRU4pIHsKICAgICAgICB3cy5zZW5kKCdwaW5nJyk7CiAgICAgIH0KICAgIH0sIDI1MDAwKTsKICAgIHdzLl9waW5nSW50ZXJ2YWwgPSBwaW5nSW50ZXJ2YWw7IC8vIGVzbGludC1kaXNhYmxlLWxpbmUgbm8tdW5kZXJzY29yZS1kYW5nbGUKICB9OwoKICB3cy5vbm1lc3NhZ2UgPSAoZXZlbnQpID0+IHsKICAgIHRyeSB7CiAgICAgIGNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGV2ZW50LmRhdGEgYXMgc3RyaW5nKSBhcyBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPjsKICAgICAgY29uc3QgdHlwZSA9IGRhdGEudHlwZSBhcyBzdHJpbmc7CiAgICAgIGlmICh0eXBlID09PSAnaGVhcnRiZWF0JyB8fCAhdHlwZSkgewogICAgICAgIGNhbGxiYWNrcy5vbkhlYXJ0YmVhdD8uKGRhdGEpOwogICAgICB9IGVsc2UgaWYgKHR5cGUgPT09ICdzcG90X3VwZGF0ZScpIHsKICAgICAgICBjYWxsYmFja3Mub25TcG90VXBkYXRlPy4oZGF0YSk7CiAgICAgIH0gZWxzZSBpZiAodHlwZSA9PT0gJ2FsZXJ0X2ZpcmVkJykgewogICAgICAgIGNhbGxiYWNrcy5vbkFsZXJ0RmlyZWQ/LihkYXRhKTsKICAgICAgfQogICAgfSBjYXRjaCAoZSkgewogICAgICAvLyBpZ25vcmUgcGFyc2UgZXJyb3JzIChlLmcuIHBvbmcgcmVwbHkpCiAgICB9CiAgfTsKCiAgd3Mub25lcnJvciA9IChlKSA9PiBjYWxsYmFja3Mub25FcnJvcj8uKGUpOwogIHdzLm9uY2xvc2UgPSAoKSA9PiB7CiAgICBpZiAod3MuX3BpbmdJbnRlcnZhbCkgY2xlYXJJbnRlcnZhbCh3cy5fcGluZ0ludGVydmFsKTsKICAgIGNhbGxiYWNrcy5vbkRpc2Nvbm5lY3RlZD8uKCk7CiAgfTsKCiAgcmV0dXJuIHdzOwp9Cg==
+/**
+ * src/services/api.ts
+ * API service layer for options_agent backend.
+ * All calls go to the FastAPI server running alongside the orchestrator.
+ *
+ * Environment variables (Vite):
+ *   VITE_API_URL   — base URL of the options_agent API (default: http://localhost:8000)
+ *   VITE_WS_URL    — WebSocket URL (default: ws://localhost:8000/ws)
+ */
+
+import type {
+  AgentInfo,
+  OptionContract,
+  SpotQuote,
+  RiskMatrix,
+  RiskAlert,
+  WorkflowLog,
+  MacroEvent,
+  DashboardSnapshot,
+} from '../types';
+
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
+
+const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const WS_BASE = import.meta.env.VITE_WS_URL ?? `ws://localhost:8000/ws`;
+
+// ---------------------------------------------------------------------------
+// Type helpers
+// ---------------------------------------------------------------------------
+
+function mapAgentInfo(raw: Record<string, unknown>): AgentInfo {
+  return {
+    id: (raw.name as string).toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/__+/g, '_'),
+    name: raw.name as string,
+    role: (raw.name as string), // API doesn't have role; use name
+    status: (raw.status as string).toUpperCase() as AgentInfo['status'],
+    currentTask: `Last cycle: ${raw.last_cycle_id ?? '—'} | ${((raw.last_cycle_ms as number) ?? 0).toFixed(0)}ms`,
+    lastActiveTime: raw.last_active_utc
+      ? new Date(raw.last_active_utc as string).toLocaleTimeString()
+      : '—',
+    processedCount: raw.cycle_count as number ?? 0,
+    flaggedCount: 0,
+    performanceScore: raw.consecutive_errors === 0 ? 99.8 : 50,
+    workflowStep: raw.consecutive_errors === 0 ? 1 : 0,
+  };
+}
+
+function mapSpotQuote(raw: Record<string, unknown>): SpotQuote {
+  return {
+    ticker: raw.ticker as string,
+    spotPrice: raw.spot_price as number,
+    bid: raw.bid as number,
+    ask: raw.ask as number,
+    last: raw.last as number,
+    volume: raw.volume as number,
+    timestamp: (raw.timestamp_utc as string) ?? new Date().toISOString(),
+    source: raw.source as string ?? 'api',
+  };
+}
+
+function mapOptionContract(raw: Record<string, unknown>): OptionContract {
+  const greeks = raw as Record<string, unknown>;
+  return {
+    id: `${raw.ticker}-${raw.strike}-${raw.option_type}`,
+    ticker: raw.ticker as string,
+    strike: raw.strike as number,
+    expiration: raw.expiration as string,
+    daysToExpiration: Math.max(
+      1,
+      Math.round(
+        (new Date(raw.expiration as string).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      )
+    ),
+    type: (raw.option_type as string).toUpperCase() as OptionContract['type'],
+    bid: raw.bid as number,
+    ask: raw.ask as number,
+    lastPrice: raw.last as number,
+    volume: raw.volume as number,
+    openInterest: raw.open_interest as number,
+    impliedVolatility: (raw.implied_volatility as number) ?? 0,
+    underlyingPrice: (raw as Record<string, unknown>).spot_price as number ?? 0,
+    greeks: {
+      delta: (greeks.delta as number) ?? 0,
+      gamma: (greeks.gamma as number) ?? 0,
+      theta: (greeks.theta as number) ?? 0,
+      vega: (greeks.vega as number) ?? 0,
+    },
+    opportunityScore: 70,
+    agentStatus: 'WATCHED',
+    riskRating: 'MED',
+  };
+}
+
+function mapRiskMatrix(raw: Record<string, unknown>): RiskMatrix {
+  return {
+    ticker: raw.ticker as string,
+    spotPrice: raw.spot_price as number,
+    gammaWallBreach: raw.gamma_wall_breach as boolean,
+    zeroGammaBreach: raw.zero_gamma_breach as boolean,
+    ivCrushImminent: raw.iv_crush_imminent as boolean,
+    evArbDetected: raw.ev_arb_detected as boolean,
+    ivAnalysis: raw.iv_analysis
+      ? {
+          currentIv: ((raw.iv_analysis as Record<string, unknown>).current_iv as number) ?? 0,
+          ivRank: ((raw.iv_analysis as Record<string, unknown>).iv_rank as number) ?? 0,
+        }
+      : null,
+    gammaWallStrike:
+      (((raw.gamma_profiles as unknown as Array<Record<string, unknown>>)?.[0])
+        ?.gamma_wall_strike as number) ?? null,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// REST API client
+// ---------------------------------------------------------------------------
+
+async function apiFetch<T>(path: string): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!res.ok) {
+    throw new Error(`API ${res.status}: ${path}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+export const api = {
+  /** Full dashboard snapshot — use on mount */
+  async getSnapshot(): Promise<DashboardSnapshot> {
+    return apiFetch<DashboardSnapshot>('/snapshot');
+  },
+
+  async getHeartbeat() {
+    return apiFetch<Record<string, unknown>>('/heartbeat');
+  },
+
+  async getAgents(): Promise<AgentInfo[]> {
+    const raw = await apiFetch<Record<string, unknown>[]>('/agents');
+    return raw.map(mapAgentInfo);
+  },
+
+  async getSpotPrices(): Promise<Record<string, SpotQuote>> {
+    const raw = await apiFetch<Record<string, Record<string, unknown>>>('/spot');
+    const result: Record<string, SpotQuote> = {};
+    for (const [ticker, quote] of Object.entries(raw)) {
+      result[ticker] = mapSpotQuote(quote);
+    }
+    return result;
+  },
+
+  async getSpotPrice(ticker: string): Promise<SpotQuote> {
+    return apiFetch<Record<string, unknown>>(`/spot/${ticker.toUpperCase()}`).then(mapSpotQuote);
+  },
+
+  async getChains(ticker: string): Promise<OptionContract[]> {
+    const raw = await apiFetch<Record<string, unknown>[]>(
+      `/chains/${ticker.toUpperCase()}`
+    );
+    return raw.flatMap((chain: Record<string, unknown>) =>
+      ((chain.contracts as Record<string, unknown>[]) ?? []).map(mapOptionContract)
+    );
+  },
+
+  async getRisk(ticker: string): Promise<RiskMatrix | null> {
+    try {
+      return apiFetch<Record<string, unknown>>(`/risk/${ticker.toUpperCase()}`).then(mapRiskMatrix);
+    } catch {
+      return null;
+    }
+  },
+
+  async getAlerts(): Promise<RiskAlert[]> {
+    return apiFetch<RiskAlert[]>('/alerts');
+  },
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      await apiFetch<{ status: string }>('/health');
+      return true;
+    } catch {
+      return false;
+    }
+  },
+};
+
+// ---------------------------------------------------------------------------
+// WebSocket client
+// ---------------------------------------------------------------------------
+
+export type WSCallbacks = {
+  onHeartbeat?: (data: Record<string, unknown>) => void;
+  onSpotUpdate?: (data: Record<string, unknown>) => void;
+  onAlertFired?: (data: Record<string, unknown>) => void;
+  onConnected?: () => void;
+  onDisconnected?: () => void;
+  onError?: (err: unknown) => void;
+};
+
+export function createWebSocket(callbacks: WSCallbacks): WebSocket {
+  const ws = new WebSocket(WS_BASE);
+
+  ws.onopen = () => {
+    callbacks.onConnected?.();
+    // Ping every 25s to keep alive
+    const pingInterval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send('ping');
+      }
+    }, 25000);
+    ws._pingInterval = pingInterval; // eslint-disable-line no-underscore-dangle
+  };
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data as string) as Record<string, unknown>;
+      const type = data.type as string;
+      if (type === 'heartbeat' || !type) {
+        callbacks.onHeartbeat?.(data);
+      } else if (type === 'spot_update') {
+        callbacks.onSpotUpdate?.(data);
+      } else if (type === 'alert_fired') {
+        callbacks.onAlertFired?.(data);
+      }
+    } catch (e) {
+      // ignore parse errors (e.g. pong reply)
+    }
+  };
+
+  ws.onerror = (e) => callbacks.onError?.(e);
+  ws.onclose = () => {
+    if (ws._pingInterval) clearInterval(ws._pingInterval);
+    callbacks.onDisconnected?.();
+  };
+
+  return ws;
+}
