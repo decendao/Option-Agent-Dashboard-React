@@ -87,9 +87,9 @@ function mapOptionContract(raw: Record<string, unknown>): OptionContract {
       theta: (greeks.theta as number) ?? 0,
       vega: (greeks.vega as number) ?? 0,
     },
-    opportunityScore: 70,
-    agentStatus: 'WATCHED',
-    riskRating: 'MED',
+    opportunityScore: (raw.opportunity_score as number) ?? 70,
+    agentStatus: ((raw.agent_status as string)?.toUpperCase() ?? 'WATCHED') as OptionContract['agentStatus'],
+    riskRating: ((raw.risk_rating as string)?.toUpperCase() ?? 'MED') as OptionContract['riskRating'],
   };
 }
 

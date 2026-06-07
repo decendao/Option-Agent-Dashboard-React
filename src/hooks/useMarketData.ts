@@ -38,6 +38,7 @@ export interface MarketDataState {
   spotPrices: Record<string, SpotQuote>;
   contracts: OptionContract[];
   selectedTicker: string;
+  isLoadingContracts: boolean;
 
   // Agents
   agents: AgentInfo[];
@@ -59,12 +60,14 @@ export interface MarketDataState {
   setSelectedTicker: (ticker: string) => void;
   setConfig: (config: MonitorConfig) => void;
   addLog: (log: WorkflowLog) => void;
+  clearLogs: () => void;
   refresh: () => Promise<void>;
 }
 
 export function useMarketData(): MarketDataState {
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('connecting');
   const [uptimeSeconds, setUptimeSeconds] = useState(0);
+  const [isLoadingContracts, setIsLoadingContracts] = useState(false);
   const [spotPrices, setSpotPrices] = useState<Record<string, SpotQuote>>(
     Object.fromEntries(
       Object.entries(INITIAL_TICKER_PRICES).map(([ticker, price]) => [
@@ -90,6 +93,8 @@ export function useMarketData(): MarketDataState {
   const addLog = useCallback((log: WorkflowLog) => {
     setLogs((prev) => [log, ...prev].slice(0, 80));
   }, []);
+
+  const clearLogs = useCallback(() => setLogs([]), []);
 
   const buildLogFromHeartbeat = useCallback(
     (cycleId: string, agentA: boolean, agentB: boolean, agentC: boolean, durationMs: number) => {
@@ -253,9 +258,9 @@ export function useMarketData(): MarketDataState {
                 theta: (raw.theta as number) ?? 0,
                 vega: (raw.vega as number) ?? 0,
               },
-              opportunityScore: 70,
-              agentStatus: 'WATCHED',
-              riskRating: 'MED',
+              opportunityScore: (raw.opportunity_score as number) ?? 70,
+              agentStatus: ((raw.agent_status as string)?.toUpperCase() ?? 'WATCHED') as OptionContract['agentStatus'],
+              riskRating: ((raw.risk_rating as string)?.toUpperCase() ?? 'MED') as OptionContract['riskRating'],
             });
           }
         }
@@ -332,16 +337,17 @@ export function useMarketData(): MarketDataState {
 
   useEffect(() => {
     if (connectionStatus !== 'live') return;
+    setIsLoadingContracts(true);
     api
       .getChains(selectedTicker)
       .then((chains) => {
         if (chains.length > 0) setContracts(chains);
       })
       .catch(() => {
-        // fallback: generate mock
         const spot = spotPrices[selectedTicker]?.spotPrice ?? 125;
         setContracts(generateContracts(selectedTicker, spot));
-      });
+      })
+      .finally(() => setIsLoadingContracts(false));
   }, [selectedTicker, connectionStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Public actions ────────────────────────────────────────────────────
@@ -357,6 +363,7 @@ export function useMarketData(): MarketDataState {
     spotPrices,
     contracts,
     selectedTicker,
+    isLoadingContracts,
     agents,
     riskMatrices,
     recentAlerts,
@@ -366,6 +373,7 @@ export function useMarketData(): MarketDataState {
     setSelectedTicker,
     setConfig: handleSetConfig,
     addLog,
+    clearLogs,
     refresh,
   };
 }
