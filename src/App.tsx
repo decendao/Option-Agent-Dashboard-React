@@ -1,0 +1,350 @@
+import { useState, useEffect, useRef } from 'react';
+import {
+  Agent,
+  OptionContract,
+  WorkflowLog,
+  MonitorConfig,
+  MacroEvent,
+} from './types';
+import {
+  INITIAL_AGENTS,
+  INITIAL_CONFIG,
+  INITIAL_LOGS,
+  INITIAL_TICKER_PRICES,
+  INITIAL_MACRO_EVENTS,
+  generateContracts,
+  generateRandomLog,
+} from './data/mockData';
+import { AgentStatusCard } from './components/AgentStatusCard';
+import { OptionChainGrid } from './components/OptionChainGrid';
+import { BlackScholesSimulator } from './components/BlackScholesSimulator';
+import { WorkflowLogs } from './components/WorkflowLogs';
+import { AgentConfigPanel } from './components/AgentConfigPanel';
+import {
+  Activity,
+  Workflow,
+  Cpu,
+  BadgeAlert,
+  Terminal,
+  Layers,
+  Sparkles,
+} from 'lucide-react';
+
+export default function App() {
+  // Global States
+  const [config, setConfig] = useState<MonitorConfig>(INITIAL_CONFIG);
+  const [spotPrices, setSpotPrices] = useState<Record<string, number>>(INITIAL_TICKER_PRICES);
+  const [agents, setAgents] = useState<Agent[]>(INITIAL_AGENTS);
+  const [macroEvents, setMacroEvents] = useState<MacroEvent[]>(INITIAL_MACRO_EVENTS);
+  const [logs, setLogs] = useState<WorkflowLog[]>(INITIAL_LOGS);
+  const [contracts, setContracts] = useState<OptionContract[]>([]);
+  const [selectedContract, setSelectedContract] = useState<OptionContract | null>(null);
+
+  // Streaming State Controls
+  const [isLogStreamPaused, setIsLogStreamPaused] = useState(false);
+  const liveSpotPrice = spotPrices[config.selectedTicker];
+
+  // Load initial option chain on startup or ticker change
+  useEffect(() => {
+    const freshContracts = generateContracts(config.selectedTicker, liveSpotPrice);
+    setContracts(freshContracts);
+
+    // Pre-select the nearest Money Call as default for the sandbox
+    const calls = freshContracts.filter((c) => c.type === 'CALL');
+    const atMoneyCall = calls.reduce((prev, curr) =>
+      Math.abs(curr.strike - liveSpotPrice) < Math.abs(prev.strike - liveSpotPrice) ? curr : prev
+      , calls[0]
+    );
+    setSelectedContract(atMoneyCall || null);
+  }, [config.selectedTicker]);
+
+  // Real-time market tick and workflow logs loop
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // 1. Simulate Spot Price Fluctuation (Volatile Random Walk +- $0.02 to $0.40)
+      setSpotPrices((prev) => {
+        const next = { ...prev };
+        Object.keys(next).forEach((t) => {
+          const changePct = (Math.random() - 0.5) * 0.003; // max 0.15% change
+          next[t] = Number((next[t] * (1 + changePct)).toFixed(2));
+        });
+        return next;
+      });
+
+      // 2. Generate random agent workflow logs & steps if not fully paused
+      if (!isLogStreamPaused) {
+        // Query active agents
+        const activeAgents = agents.filter((a) => a.status === 'ACTIVE');
+        if (activeAgents.length > 0) {
+          const { log, updatedAgents } = generateRandomLog(agents);
+          setLogs((prev) => [log, ...prev].slice(0, 80)); // Limit log history to 80 records
+
+          // Merge updated agent telemetry
+          setAgents((prev) =>
+            prev.map((a) => {
+              const matched = updatedAgents.find((ua) => ua.id === a.id);
+              return matched ? matched : a;
+            })
+          );
+        }
+      }
+
+      // 3. Simulate Polymarket & Kalshi macro event probability volatility
+      setMacroEvents((prev) =>
+        prev.map((evt) => {
+          const move = (Math.random() - 0.5) * 0.022; // max 1.1% change
+          return {
+            ...evt,
+            probability: Math.max(0.04, Math.min(0.96, Number((evt.probability + move).toFixed(3))))
+          };
+        })
+      );
+    }, config.scanIntervalMs);
+
+    return () => clearInterval(timer);
+  }, [agents, isLogStreamPaused, config.scanIntervalMs]);
+
+  // Recalculate options pricing chain whenever spot price changes
+  useEffect(() => {
+    setContracts((prev) => {
+      const regenerated = generateContracts(config.selectedTicker, liveSpotPrice);
+      // Retain selection references if user had selected a row
+      if (selectedContract) {
+        const matchedSelected = regenerated.find((c) => c.id === selectedContract.id);
+        if (matchedSelected) {
+          setSelectedContract(matchedSelected);
+        }
+      }
+      return regenerated;
+    });
+  }, [liveSpotPrice, config.selectedTicker]);
+
+  // Toggle active constraints on specific agents
+  const handleToggleAgentStatus = (id: string) => {
+    setAgents((prev) =>
+      prev.map((a) => {
+        if (a.id === id) {
+          const nextStatus = a.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
+          const triggerMsg: WorkflowLog = {
+            id: `l-toggle-${Date.now()}`,
+            timestamp: new Date().toTimeString().split(' ')[0],
+            level: nextStatus === 'ACTIVE' ? 'success' : 'warn',
+            agentId: a.id,
+            agentName: a.name,
+            message: `User-triggered manual override state change. Status set to: ${nextStatus}.`,
+          };
+          setLogs((logsPrev) => [triggerMsg, ...logsPrev]);
+          return { ...a, status: nextStatus };
+        }
+        return a;
+      })
+    );
+  };
+
+  // Modify monitoring inputs
+  const handleUpdateConfig = (newConfig: MonitorConfig) => {
+    const configMsg: WorkflowLog = {
+      id: `l-conf-${Date.now()}`,
+      timestamp: new Date().toTimeString().split(' ')[0],
+      level: 'info',
+      agentId: 'scouter',
+      agentName: 'Opportunity Scouter Agent',
+      message: `Re-calibrated search parameter constraints: Ticker = ${newConfig.selectedTicker}, min score threshold = ${newConfig.minOpportunityScore}.`,
+    };
+    setLogs((prev) => [configMsg, ...prev]);
+    setConfig(newConfig);
+  };
+
+  const handleClearLogs = () => {
+    setLogs([]);
+  };
+
+  const handleToggleLogStream = () => {
+    setIsLogStreamPaused((prev) => !prev);
+  };
+
+  return (
+    <div id="dashboard-root" className="relative min-h-screen bg-gradient-to-tr from-[#090d16] via-[#05070c] to-[#0a1220] text-slate-100 flex flex-col antialiased overflow-x-hidden">
+      {/* Visual background ambient blurs */}
+      <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] bg-emerald-500/10 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-10%] h-[600px] w-[600px] bg-indigo-500/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-[40%] left-[20%] h-[350px] w-[350px] bg-sky-500/5 rounded-full blur-[110px] pointer-events-none" />
+
+      {/* Primary Header */}
+      <header className="border-b border-white/5 bg-[#090d16]/40 sticky top-0 backdrop-blur-xl z-40 select-none">
+        <div className="max-w-7xl mx-auto px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          {/* Logo and metadata label */}
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-2.5 text-emerald-350 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+              <Activity size={20} className="animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-sans font-extrabold tracking-tight text-lg text-white">
+                  OPT-CORE Monitor
+                </h1>
+                <span className="rounded-xl bg-white/5 px-2.0 py-0.5 font-mono text-[9px] text-indigo-300 border border-white/5 font-extrabold tracking-widest uppercase">
+                  AGENT PIPELINE V2.4
+                </span>
+              </div>
+              <p className="font-sans text-xs text-slate-450 mt-0.5">
+                Autonomous real-time pricing analysis and Black-Scholes Greeks scanner orchestration layer.
+              </p>
+            </div>
+          </div>
+
+          {/* Meta metrics readouts */}
+          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px]">
+            <div className="flex items-center gap-2 bg-black/40 p-1.5 px-3 rounded-xl border border-white/5 shadow-inner">
+              <div className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </div>
+              <span className="text-slate-400 uppercase font-bold tracking-wider">NASDAQ FEED:</span>
+              <span className="text-emerald-300 font-extrabold">100.0% LIVE</span>
+            </div>
+            <div className="flex items-center gap-2 bg-black/40 p-1.5 px-3 rounded-xl border border-white/5 shadow-inner">
+              <span className="text-slate-400 font-sans font-bold uppercase tracking-wider">SECURE LATENCY:</span>
+              <span className="text-indigo-300 font-extrabold">12ms</span>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      {/* Main Canvas Structure */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-5 space-y-6">
+        
+        {/* Row 1: Agent Fleet Grid Control Panel */}
+        <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="font-sans text-xs uppercase. tracking-wider text-slate-400 font-bold flex items-center gap-1.5">
+              <Layers size={13} className="text-slate-500" />
+              Distributed Node Status & Telemetry
+            </h2>
+            <div className="flex items-center gap-1 font-mono text-[10px] text-slate-500">
+              <span>Nodes online:</span>
+              <span className="text-emerald-400 font-bold">{agents.filter(a => a.status === 'ACTIVE').length}/4</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {agents.map((agent) => (
+              <AgentStatusCard
+                key={agent.id}
+                agent={agent}
+                onToggleStatus={handleToggleAgentStatus}
+              />
+            ))}
+
+            {/* Column 4: Macro Arbitrage Monitor */}
+            <div className="relative overflow-hidden backdrop-blur-md rounded-2xl border border-indigo-505/20 bg-indigo-950/5 p-5 transition-all duration-300 hover:scale-[1.02] hover:border-indigo-500/35 hover:shadow-xl hover:shadow-black/30 flex flex-col justify-between">
+              {/* Card ambient style */}
+              <div className="absolute right-0 top-0 -mr-4 -mt-4 h-16 w-16 rounded-full bg-indigo-500/10 blur-xl pointer-events-none" />
+              
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <div className="relative flex h-1.5 w-1.5 animate-pulse">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-indigo-500"></span>
+                    </div>
+                    <span className="font-sans font-extrabold text-white tracking-tight text-xs">Macro Arb Radar</span>
+                  </div>
+                  <span className="rounded bg-indigo-500/10 px-1 py-0.5 font-mono text-[8.5px] text-indigo-300 border border-indigo-500/15 font-bold uppercase tracking-wider scale-90">
+                    PROBABILITY DATA
+                  </span>
+                </div>
+                <p className="font-sans text-[11px] text-zinc-400 leading-normal">
+                  Prediction markets (Polymarket & Kalshi) weight probability indices driving IV smiles.
+                </p>
+              </div>
+
+              {/* Connected events */}
+              <div className="mt-3.5 space-y-2 flex-grow">
+                {macroEvents.map((evt) => (
+                  <div key={evt.id} className="rounded-xl bg-black/45 p-2.5 border border-white/5 flex flex-col gap-1 transition-all duration-300 hover:bg-black/60">
+                    <div className="flex justify-between items-center text-[10px]">
+                      <span className={`text-[8px] font-extrabold px-1.5 py-0.2 rounded font-mono border ${
+                        evt.source === 'Polymarket' 
+                          ? 'bg-sky-500/15 text-sky-400 border-sky-500/20' 
+                          : 'bg-rose-500/15 text-rose-455 border-rose-500/20'
+                      }`}>
+                        {evt.source.toUpperCase()}
+                      </span>
+                      <span className="font-mono text-indigo-300 font-extrabold text-xs transition-colors duration-150">
+                        {Math.round(evt.probability * 100)}% prob
+                      </span>
+                    </div>
+                    <p className="font-sans text-[10px] text-slate-205 font-medium leading-snug tracking-tight">
+                      {evt.question}
+                    </p>
+                    <span className="font-mono text-[8.5px] text-emerald-400/90 leading-tight block">
+                      ↳ {evt.impactCorrelation}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Row 2: Standard Options chains & Sandbox simulator split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Options Chain table: Left with 7/12 */}
+          <section className="lg:col-span-7 h-full">
+            <OptionChainGrid
+              contracts={contracts}
+              spotPrice={liveSpotPrice}
+              selectedTicker={config.selectedTicker}
+              selectedContractId={selectedContract ? selectedContract.id : null}
+              onSelectContract={setSelectedContract}
+              minScoreThreshold={config.minOpportunityScore}
+            />
+          </section>
+
+          {/* Configuration constraints: Right with 5/12 */}
+          <section className="lg:col-span-5 flex flex-col justify-between space-y-6">
+            {/* Strategy constraints config */}
+            <AgentConfigPanel
+              config={config}
+              onSaveConfig={handleUpdateConfig}
+            />
+
+            {/* Live Streaming Workflow logs */}
+            <WorkflowLogs
+              logs={logs}
+              onClearLogs={handleClearLogs}
+              isPaused={isLogStreamPaused}
+              onTogglePause={handleToggleLogStream}
+            />
+          </section>
+        </div>
+
+        {/* Row 3: Black-Scholes Sandbox Playground */}
+        <section>
+          <BlackScholesSimulator
+            selectedContract={selectedContract}
+            spotPrice={liveSpotPrice}
+          />
+        </section>
+
+      </main>
+
+      {/* Simple Footer */}
+      <footer className="border-t border-white/5 bg-[#090d16]/30 mt-12 py-6 text-center select-none text-[10px] text-slate-500 font-mono">
+        <div className="max-w-7xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span>OPT-CORE Monitor is a high-performance quantitative analytics orchestration workspace.</span>
+          <div className="flex gap-4">
+            <span className="flex items-center gap-1 hover:text-slate-300 transition-colors cursor-default">
+              <Sparkles size={11} className="text-emerald-400" /> Auto-pricing Engine
+            </span>
+            <span className="flex items-center gap-1 hover:text-slate-300 transition-colors cursor-default">
+              <Cpu size={11} className="text-indigo-400" /> BSM Sensitivities Active
+            </span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

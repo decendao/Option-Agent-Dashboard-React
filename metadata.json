@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: Option Monitor Agents Dashboard",
+  "description": "A real-time dashboard visualization for quantitative option monitor agents workflow, offering Black-Scholes Greeks calculators, option chain analysis, and automated opportunity scanning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
