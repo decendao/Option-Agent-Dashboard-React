@@ -1,18 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component, ReactNode, ErrorInfo } from 'react';
 import {
-  Agent,
   OptionContract,
-  WorkflowLog,
   MonitorConfig,
-  MacroEvent,
 } from './types';
 import {
-  INITIAL_CONFIG,
   INITIAL_TICKER_PRICES,
-  INITIAL_MACRO_EVENTS,
-  generateContracts,
   generateRandomLog,
 } from './data/mockData';
+
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; message: string }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, message: '' };
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, message: error.message };
+  }
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('[Dashboard Error]', error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-[#090d16] flex flex-col items-center justify-center text-slate-300 font-mono gap-4 p-8">
+          <span className="text-rose-400 text-2xl">⚠ Dashboard Error</span>
+          <p className="text-sm text-slate-500 max-w-md text-center">{this.state.message}</p>
+          <button
+            onClick={() => this.setState({ hasError: false, message: '' })}
+            className="mt-2 px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs"
+          >
+            Retry
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import { AgentStatusCard } from './components/AgentStatusCard';
 import { OptionChainGrid } from './components/OptionChainGrid';
 import { BlackScholesSimulator } from './components/BlackScholesSimulator';
@@ -39,25 +63,21 @@ export default function App() {
     spotPrices,
     contracts,
     selectedTicker,
+    isLoadingContracts,
     agents,
     logs,
     macroEvents,
     config,
     setConfig,
     addLog,
+    clearLogs,
     refresh,
   } = useMarketData();
 
-  const [localConfig, setLocalConfig] = useState<MonitorConfig>(INITIAL_CONFIG);
   const [isLogStreamPaused, setIsLogStreamPaused] = useState(false);
 
-  // Keep localConfig in sync with hook's config (which may update selectedTicker)
-  useEffect(() => {
-    setLocalConfig(config);
-  }, [config]);
-
-  const liveSpotPrice = spotPrices[localConfig.selectedTicker]?.spotPrice
-    ?? INITIAL_TICKER_PRICES[localConfig.selectedTicker]
+  const liveSpotPrice = spotPrices[config.selectedTicker]?.spotPrice
+    ?? INITIAL_TICKER_PRICES[config.selectedTicker]
     ?? 125;
 
   // Demo-mode only: simulate random logs
@@ -67,29 +87,26 @@ export default function App() {
       if (!isLogStreamPaused) {
         const activeAgents = agents.filter((a) => a.status === 'ACTIVE');
         if (activeAgents.length > 0) {
-          const { log, updatedAgents } = generateRandomLog(agents);
+          const { log } = generateRandomLog(agents);
           addLog(log);
         }
       }
-      // Polymarket volatility in demo mode
-      setLocalConfig((prev) => prev); // no-op — macroEvents handled by hook
-    }, localConfig.scanIntervalMs);
+    }, config.scanIntervalMs);
     return () => clearInterval(timer);
-  }, [agents, isLogStreamPaused, connectionStatus, localConfig.scanIntervalMs, addLog]);
+  }, [agents, isLogStreamPaused, connectionStatus, config.scanIntervalMs, addLog]);
 
-  // Pre-select nearest ATM contract for simulator
+  // Pre-select nearest ATM contract for simulator (prefer CALL)
   const [selectedContract, setSelectedContract] = useState<OptionContract | null>(null);
   useEffect(() => {
-    if (contracts.length === 0) return;
-    const calls = contracts.filter((c) => c.type === 'CALL');
-    const atm = calls.reduce(
-      (prev, curr) =>
-        Math.abs(curr.strike - liveSpotPrice) < Math.abs(prev.strike - liveSpotPrice)
-          ? curr
-          : prev,
-      calls[0]
+    if (contracts.length === 0) {
+      setSelectedContract(null);
+      return;
+    }
+    const nearest = contracts.reduce((prev, curr) =>
+      Math.abs(curr.strike - liveSpotPrice) < Math.abs(prev.strike - liveSpotPrice) ? curr : prev
     );
-    setSelectedContract(atm ?? null);
+    const atmCall = contracts.find((c) => c.strike === nearest.strike && c.type === 'CALL');
+    setSelectedContract(atmCall ?? nearest);
   }, [contracts, liveSpotPrice]);
 
   // Toggle agent pause
@@ -105,7 +122,6 @@ export default function App() {
     });
   };
 
-  // Config save — updates local state; selectedTicker change triggers contract reload via hook
   const handleUpdateConfig = (newConfig: MonitorConfig) => {
     addLog({
       id: `l-conf-${Date.now()}`,
@@ -115,12 +131,7 @@ export default function App() {
       agentName: 'Opportunity Scouter Agent',
       message: `Re-calibrated: Ticker=${newConfig.selectedTicker}, min score=${newConfig.minOpportunityScore}.`,
     });
-    setLocalConfig(newConfig);
     setConfig(newConfig);
-  };
-
-  const handleClearLogs = () => {
-    // logs are managed in hook — clear through hook
   };
 
   const handleToggleLogStream = () => {
@@ -131,6 +142,7 @@ export default function App() {
   const uptimeStr = `${Math.floor(uptimeSeconds / 60)}m ${uptimeSeconds % 60}s`;
 
   return (
+    <ErrorBoundary>
     <div id="dashboard-root" className="relative min-h-screen bg-gradient-to-tr from-[#090d16] via-[#05070c] to-[#0a1220] text-slate-100 flex flex-col antialiased overflow-x-hidden">
 
       {/* Demo mode banner */}
@@ -290,21 +302,22 @@ export default function App() {
             <OptionChainGrid
               contracts={contracts}
               spotPrice={liveSpotPrice}
-              selectedTicker={localConfig.selectedTicker}
+              selectedTicker={config.selectedTicker}
               selectedContractId={selectedContract ? selectedContract.id : null}
               onSelectContract={setSelectedContract}
-              minScoreThreshold={localConfig.minOpportunityScore}
+              minScoreThreshold={config.minOpportunityScore}
+              isLoadingContracts={isLoadingContracts}
             />
           </section>
 
           <section className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <AgentConfigPanel
-              config={localConfig}
+              config={config}
               onSaveConfig={handleUpdateConfig}
             />
             <WorkflowLogs
               logs={logs}
-              onClearLogs={handleClearLogs}
+              onClearLogs={clearLogs}
               isPaused={isLogStreamPaused}
               onTogglePause={handleToggleLogStream}
             />
@@ -337,5 +350,6 @@ export default function App() {
       </footer>
 
     </div>
+    </ErrorBoundary>
   );
 }

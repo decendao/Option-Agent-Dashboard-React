@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { OptionContract, OptionType } from '../types';
 import { ShieldAlert, Eye, Filter, ArrowUpRight, TrendingUp, HelpCircle } from 'lucide-react';
 
@@ -9,6 +9,7 @@ interface OptionChainGridProps {
   selectedContractId: string | null;
   onSelectContract: (contract: OptionContract) => void;
   minScoreThreshold: number;
+  isLoadingContracts?: boolean;
 }
 
 export const OptionChainGrid: React.FC<OptionChainGridProps> = ({
@@ -18,23 +19,24 @@ export const OptionChainGrid: React.FC<OptionChainGridProps> = ({
   selectedContractId,
   onSelectContract,
   minScoreThreshold,
+  isLoadingContracts = false,
 }) => {
   const [filterType, setFilterType] = useState<'ALL' | 'FLAGGED' | 'NEAR_MONEY'>('NEAR_MONEY');
 
-  // Filter option chain contracts
-  const filteredContracts = contracts.filter((c) => {
-    if (filterType === 'FLAGGED') {
-      return c.agentStatus === 'FLAGGED';
-    }
+  const filteredContracts = useMemo(() => contracts.filter((c) => {
+    if (filterType === 'FLAGGED') return c.agentStatus === 'FLAGGED';
     if (filterType === 'NEAR_MONEY') {
-      const distancePct = Math.abs(c.strike - spotPrice) / spotPrice;
-      return distancePct <= 0.08; // Within 8% of spot
+      const distancePct = spotPrice > 0 ? Math.abs(c.strike - spotPrice) / spotPrice : 1;
+      return distancePct <= 0.08;
     }
-    return true; // All
-  });
+    return true;
+  }), [contracts, filterType, spotPrice]);
 
-  // Organize by unique strikes to reconstruct the Calls-on-left, Puts-on-right table structure
-  const uniqueStrikes = (Array.from(new Set(filteredContracts.map((c) => c.strike))).sort((a, b) => (b as number) - (a as number)) as number[]);
+  const uniqueStrikes = useMemo(() =>
+    Array.from(new Set(filteredContracts.map((c) => c.strike)))
+      .sort((a, b) => (b as number) - (a as number)) as number[],
+    [filteredContracts]
+  );
 
   const getContractByTypeAndStrike = (strike: number, type: OptionType): OptionContract | undefined => {
     return filteredContracts.find((c) => c.strike === strike && c.type === type);
@@ -147,7 +149,13 @@ export const OptionChainGrid: React.FC<OptionChainGridProps> = ({
           </thead>
 
           <tbody className="divide-y divide-white/5">
-            {uniqueStrikes.length === 0 ? (
+            {isLoadingContracts ? (
+              <tr>
+                <td colSpan={11} className="py-8 text-center text-slate-500 font-mono text-xs animate-pulse">
+                  Loading contracts...
+                </td>
+              </tr>
+            ) : uniqueStrikes.length === 0 ? (
               <tr>
                 <td colSpan={11} className="py-8 text-center text-slate-500 italic">
                   No options found matching active filters. Modify selection settings.
@@ -214,7 +222,7 @@ export const OptionChainGrid: React.FC<OptionChainGridProps> = ({
 
                     {/* MOUNT CENTER STRIKE ELEMENT */}
                     <td className={`py-2 px-4 text-center bg-white/5 border-x border-white/5 shadow-inner select-none relative ${
-                      isAtTheMoney ? 'text-amber-300 border-y border-amber-500/20 font-extrabold" id="strike-atm' : 'text-indigo-200 font-bold'
+                      isAtTheMoney ? 'text-amber-300 border-y border-amber-500/20 font-extrabold' : 'text-indigo-200 font-bold'
                     }`}>
                       <div className="font-bold relative z-10">${strike}</div>
                       {/* Agent Wall Signal */}
