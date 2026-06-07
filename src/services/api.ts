@@ -23,8 +23,8 @@ import type {
 // Config
 // ---------------------------------------------------------------------------
 
-const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
-const WS_BASE = import.meta.env.VITE_WS_URL ?? `ws://localhost:8000/ws`;
+const API_BASE = import.meta.env.VITE_API_URL ?? 'https://options-agent-production.up.railway.app';
+const WS_BASE = import.meta.env.VITE_WS_URL ?? 'wss://options-agent-production.up.railway.app/ws';
 
 // ---------------------------------------------------------------------------
 // Type helpers
